@@ -65,7 +65,7 @@ public class Cell {
         else {
             gameField.getGc().setFill(owner.getColor());
             gameField.getGc().fillRoundRect(col * size, row * size, size-2, size-2, arcRound, arcRound);
-            gameField.getGc().setStroke(Color.WHITE);
+            gameField.getGc().setStroke(Color.BLACK);
             gameField.getGc().strokeText(String.valueOf(price), col*size+15, row*size+25);
         }
     }
