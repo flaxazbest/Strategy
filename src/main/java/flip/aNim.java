@@ -17,9 +17,9 @@ public class aNim extends Application {
 
         primaryStage.setScene(scene);
 
-        AnimationFlip af = new AnimationFlip(4,3, Color.BEIGE, 40, root);
+        //AnimationFlip af = new AnimationFlip(4,3, Color.BEIGE, 40, root);
         primaryStage.show();
-        af.play();
+        //af.play();
     }
 
     public static void main(String[] args) {

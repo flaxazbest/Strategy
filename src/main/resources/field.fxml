@@ -7,7 +7,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="580.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="FieldController">
    <children>
-      <Canvas fx:id="canvas" height="400.0" layoutX="100.0" layoutY="90.0" onMouseClicked="#canvasMouseClick" width="400.0" />
+      <AnchorPane fx:id="canvasPane" layoutX="100.0" layoutY="90.0">
+         <children>
+            <Canvas fx:id="canvas" height="400.0" onMouseClicked="#canvasMouseClick" width="400.0" />
+         </children>
+      </AnchorPane>
       <TextField fx:id="p1buttons" layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="72.0" AnchorPane.leftAnchor="15.0" />
       <TextField fx:id="p1points" layoutX="15.0" layoutY="39.0" prefHeight="25.0" prefWidth="72.0" AnchorPane.leftAnchor="15.0" />
       <TextField layoutX="514.0" layoutY="14.0" prefHeight="25.0" prefWidth="72.0" AnchorPane.rightAnchor="15.0" />

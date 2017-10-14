@@ -3,6 +3,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 
 public class FieldController {
 
@@ -12,6 +13,9 @@ public class FieldController {
     Canvas curPlayer;
 
     @FXML
+    AnchorPane canvasPane;
+
+    @FXML
     TextField p1buttons;
     @FXML
     TextField p1points;
@@ -19,7 +23,7 @@ public class FieldController {
     private GameField gf;
 
     public void btnStart(ActionEvent actionEvent) {
-        gf = new GameField(10, 2, canvas.getGraphicsContext2D());
+        gf = new GameField(10, 2, canvas.getGraphicsContext2D(), canvasPane);
         curPlayer.getGraphicsContext2D().setFill(gf.getCurrentPlayer().getColor());
         curPlayer.getGraphicsContext2D().fillRect(0,0, curPlayer.getWidth(), curPlayer.getHeight());
         gf.draw();
@@ -31,7 +35,7 @@ public class FieldController {
         int row = (int)(mouseEvent.getY() / (canvas.getWidth() / gf.getSize()));
 
         gf.tap(row, col);
-        gf.draw();
+        //gf.draw();
 
         //p1buttons.setText(row + " " + col);
         curPlayer.getGraphicsContext2D().setFill(gf.getCurrentPlayer().getColor());

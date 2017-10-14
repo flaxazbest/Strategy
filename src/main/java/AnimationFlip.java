@@ -1,5 +1,3 @@
-package flip;
-
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
@@ -7,6 +5,7 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -25,22 +24,24 @@ public class AnimationFlip {
     private Color color;
     private double size;
     private Pane pane;
+    private GameField gameField;
 
     LinkedList<ParallelTransition> flips;
     LinkedList<Node> chips;
 
 
-    public AnimationFlip(int row, int col, Color color, double size, Pane pane) {
+    public AnimationFlip(int row, int col, Color color, double size, GameField gameField) {
         this.row = row;
         this.col = col;
         this.color = color;
         this.size = size;
-        this.pane = pane;
+        this.pane = gameField.getPane();
+        this.gameField = gameField;
 
         flips = new LinkedList<ParallelTransition>();
         chips = new LinkedList<Node>();
         for (int i=0; i<4; i++) {
-            chips.add(createCard());
+            chips.add(createCard(color));
         }
         for (Node node: chips) {
             node.setLayoutX(col*size);
@@ -62,6 +63,10 @@ public class AnimationFlip {
         translateRight.setToX(-size);
         translateRight.setAutoReverse(true);
         right.getChildren().addAll(rotateRight, translateRight);
+        right.setOnFinished(e -> {
+            chips.get(0).setVisible(false);
+            gameField.getCell(row, col+1).draw(40);
+        });
 
         //Left move
         ParallelTransition left = new ParallelTransition();
@@ -77,6 +82,10 @@ public class AnimationFlip {
         translateLeft.setToX(size);
         translateLeft.setAutoReverse(true);
         left.getChildren().addAll(rotateLeft, translateLeft);
+        left.setOnFinished(e -> {
+            chips.get(1).setVisible(false);
+            gameField.getCell(row, col-1).draw(40);
+        });
 
         //Up move
         ParallelTransition up = new ParallelTransition();
@@ -92,6 +101,10 @@ public class AnimationFlip {
         translateUp.setToY(-size);
         translateUp.setAutoReverse(true);
         up.getChildren().addAll(rotateUp, translateUp);
+        up.setOnFinished(e -> {
+            chips.get(2).setVisible(false);
+            gameField.getCell(row-1, col).draw(40);
+        });
 
         //Down move
         ParallelTransition down = new ParallelTransition();
@@ -107,12 +120,17 @@ public class AnimationFlip {
         translateDown.setToY(size);
         translateDown.setAutoReverse(true);
         down.getChildren().addAll(rotateDown, translateDown);
+        down.setOnFinished(e -> {
+            chips.get(3).setVisible(false);
+            gameField.getCell(row+1, col).draw(40);
+        });
 
+/*
         left.setCycleCount(10);
         right.setCycleCount(10);
         up.setCycleCount(10);
         down.setCycleCount(10);
-
+*/
         flips.add(right);
         flips.add(left);
         flips.add(up);
@@ -122,24 +140,20 @@ public class AnimationFlip {
     public void play() {
         for (ParallelTransition pt: flips)
             pt.play();
+//        for (Node node: chips)
+//            node.setVisible(false);
     }
 
-    private Node createCard() {
+    private Node createCard(Color color) {
 
         Canvas c = new Canvas(size, size);
+        //c.setEffect(new DropShadow());
         GraphicsContext gc = c.getGraphicsContext2D();
-
-
-        Rectangle r = new Rectangle(size, size);
-        //r.get
-
-
-
-
-        //iv.getImage().get
-        iv.setFitHeight(size);
-        iv.setFitWidth(size);
-        return iv;
+        gc.setFill(color);
+        gc.fillRoundRect(0, 0, size-2, size-2, 10, 10);
+        c.setHeight(size);
+        c.setWidth(size);
+        return c;
     }
 
 }

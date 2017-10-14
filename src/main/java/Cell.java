@@ -37,6 +37,9 @@ public class Cell {
         price++;
         if (price > 3) {
             price = 0;
+
+            AnimationFlip af = new AnimationFlip(row, col, p.getColor(), 40, gameField);
+            af.play();
             if (row > 0) {
                 gameField.getCell(row-1,col).tap(p);
                 gameField.getCell(row-1,col).setOwner(p);
@@ -53,8 +56,12 @@ public class Cell {
                 gameField.getCell(row,col+1).tap(p);
                 gameField.getCell(row,col+1).setOwner(p);
             }
+
             owner = null;
+        } else {
+
         }
+        gameField.getCell(row, col).draw(40);
     }
 
     public void draw(int size) {
