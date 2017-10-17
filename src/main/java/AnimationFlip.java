@@ -17,7 +17,7 @@ import java.util.LinkedList;
 
 public class AnimationFlip {
 
-    final Duration duration = Duration.millis(1000);
+    final Duration duration = Duration.millis(500);
 
     private int row;
     private int col;
@@ -38,92 +38,125 @@ public class AnimationFlip {
         this.pane = gameField.getPane();
         this.gameField = gameField;
 
+        int countFlips = 0;
+
         flips = new LinkedList<ParallelTransition>();
         chips = new LinkedList<Node>();
-        for (int i=0; i<4; i++) {
-            chips.add(createCard(color));
-        }
-        for (Node node: chips) {
-            node.setLayoutX(col*size);
-            node.setLayoutY(row*size);
-        }
-        pane.getChildren().addAll(chips);
 
         //Right move
-        ParallelTransition right = new ParallelTransition();
+        if (col < gameField.getSize()-1) {
+            chips.add(createCard(color));
+            chips.get(countFlips).setLayoutX(col*size);
+            chips.get(countFlips).setLayoutY(row*size);
 
-        RotateTransition rotateRight = new RotateTransition(duration, chips.get(0));
-        rotateRight.setAxis(Rotate.Y_AXIS);
-        rotateRight.setFromAngle(0);
-        rotateRight.setToAngle(180);
-        rotateRight.setInterpolator(Interpolator.EASE_OUT);
+            ParallelTransition right = new ParallelTransition();
 
-        TranslateTransition translateRight = new TranslateTransition(duration, chips.get(0));
-        translateRight.setFromX(0);
-        translateRight.setToX(-size);
-        translateRight.setAutoReverse(true);
-        right.getChildren().addAll(rotateRight, translateRight);
-        right.setOnFinished(e -> {
-            chips.get(0).setVisible(false);
-            gameField.getCell(row, col+1).draw(40);
-        });
+            RotateTransition rotateRight = new RotateTransition(duration, chips.get(countFlips));
+            rotateRight.setAxis(Rotate.Y_AXIS);
+            rotateRight.setFromAngle(-180);
+            rotateRight.setToAngle(0);
+            rotateRight.setInterpolator(Interpolator.EASE_OUT);
+
+            TranslateTransition translateRight = new TranslateTransition(duration, chips.get(countFlips));
+            translateRight.setFromX(0);
+            translateRight.setToX(size);
+            translateRight.setAutoReverse(true);
+            right.getChildren().addAll(rotateRight, translateRight);
+            final int finalCountFlipsRight = countFlips;
+            right.setOnFinished(e -> {
+                chips.get(finalCountFlipsRight).setVisible(false);
+                gameField.getCell(row, col + 1).draw(40);
+                gameField.getCell(row, col).draw(40);
+            });
+            countFlips++;
+            flips.add(right);
+        }
 
         //Left move
-        ParallelTransition left = new ParallelTransition();
+        if (col > 0) {
+            chips.add(createCard(color));
+            chips.get(countFlips).setLayoutX(col*size);
+            chips.get(countFlips).setLayoutY(row*size);
+            ParallelTransition left = new ParallelTransition();
 
-        RotateTransition rotateLeft = new RotateTransition(duration, chips.get(1));
-        rotateLeft.setAxis(Rotate.Y_AXIS);
-        rotateLeft.setFromAngle(-180);
-        rotateLeft.setToAngle(0);
-        rotateLeft.setInterpolator(Interpolator.EASE_OUT);
+            RotateTransition rotateLeft = new RotateTransition(duration, chips.get(countFlips));
+            rotateLeft.setAxis(Rotate.Y_AXIS);
+            rotateLeft.setFromAngle(0);
+            rotateLeft.setToAngle(180);
+            rotateLeft.setInterpolator(Interpolator.EASE_OUT);
 
-        TranslateTransition translateLeft = new TranslateTransition(duration, chips.get(1));
-        translateLeft.setFromX(0);
-        translateLeft.setToX(size);
-        translateLeft.setAutoReverse(true);
-        left.getChildren().addAll(rotateLeft, translateLeft);
-        left.setOnFinished(e -> {
-            chips.get(1).setVisible(false);
-            gameField.getCell(row, col-1).draw(40);
-        });
+            TranslateTransition translateLeft = new TranslateTransition(duration, chips.get(countFlips));
+            translateLeft.setFromX(0);
+            translateLeft.setToX(-size);
+            translateLeft.setAutoReverse(true);
+            left.getChildren().addAll(rotateLeft, translateLeft);
+            final int finalCountFlipsLeft = countFlips;
+            left.setOnFinished(e -> {
+                chips.get(finalCountFlipsLeft).setVisible(false);
+                gameField.getCell(row, col-1).draw(40);
+                gameField.getCell(row, col).draw(40);
+            });
+            countFlips++;
+            flips.add(left);
+        }
 
         //Up move
-        ParallelTransition up = new ParallelTransition();
+        if (row > 0) {
+            chips.add(createCard(color));
+            chips.get(countFlips).setLayoutX(col*size);
+            chips.get(countFlips).setLayoutY(row*size);
+            ParallelTransition up = new ParallelTransition();
 
-        RotateTransition rotateUp = new RotateTransition(duration, chips.get(2));
-        rotateUp.setAxis(Rotate.X_AXIS);
-        rotateUp.setFromAngle(0);
-        rotateUp.setToAngle(-180);
-        rotateUp.setInterpolator(Interpolator.EASE_OUT);
+            RotateTransition rotateUp = new RotateTransition(duration, chips.get(countFlips));
+            rotateUp.setAxis(Rotate.X_AXIS);
+            rotateUp.setFromAngle(0);
+            rotateUp.setToAngle(-180);
+            rotateUp.setInterpolator(Interpolator.EASE_OUT);
 
-        TranslateTransition translateUp = new TranslateTransition(duration, chips.get(2));
-        translateUp.setFromY(0);
-        translateUp.setToY(-size);
-        translateUp.setAutoReverse(true);
-        up.getChildren().addAll(rotateUp, translateUp);
-        up.setOnFinished(e -> {
-            chips.get(2).setVisible(false);
-            gameField.getCell(row-1, col).draw(40);
-        });
+            TranslateTransition translateUp = new TranslateTransition(duration, chips.get(countFlips));
+            translateUp.setFromY(0);
+            translateUp.setToY(-size);
+            translateUp.setAutoReverse(true);
+            up.getChildren().addAll(rotateUp, translateUp);
+            final int finalCountFlipsUp = countFlips;
+            up.setOnFinished(e -> {
+                chips.get(finalCountFlipsUp).setVisible(false);
+                gameField.getCell(row-1, col).draw(40);
+                gameField.getCell(row, col).draw(40);
+            });
+            countFlips++;
+            flips.add(up);
+        }
 
         //Down move
-        ParallelTransition down = new ParallelTransition();
+        if (row < gameField.getSize()-1) {
+            chips.add(createCard(color));
+            chips.get(countFlips).setLayoutX(col*size);
+            chips.get(countFlips).setLayoutY(row*size);
+            ParallelTransition down = new ParallelTransition();
 
-        RotateTransition rotateDown = new RotateTransition(duration, chips.get(3));
-        rotateDown.setAxis(Rotate.X_AXIS);
-        rotateDown.setFromAngle(0);
-        rotateDown.setToAngle(180);
-        rotateDown.setInterpolator(Interpolator.EASE_OUT);
+            RotateTransition rotateDown = new RotateTransition(duration, chips.get(countFlips));
+            rotateDown.setAxis(Rotate.X_AXIS);
+            rotateDown.setFromAngle(0);
+            rotateDown.setToAngle(180);
+            rotateDown.setInterpolator(Interpolator.EASE_OUT);
 
-        TranslateTransition translateDown = new TranslateTransition(duration, chips.get(3));
-        translateDown.setFromY(0);
-        translateDown.setToY(size);
-        translateDown.setAutoReverse(true);
-        down.getChildren().addAll(rotateDown, translateDown);
-        down.setOnFinished(e -> {
-            chips.get(3).setVisible(false);
-            gameField.getCell(row+1, col).draw(40);
-        });
+            TranslateTransition translateDown = new TranslateTransition(duration, chips.get(countFlips));
+            translateDown.setFromY(0);
+            translateDown.setToY(size);
+            translateDown.setAutoReverse(true);
+            down.getChildren().addAll(rotateDown, translateDown);
+            final int finalCountFlipsDown = countFlips;
+            down.setOnFinished(e -> {
+                chips.get(finalCountFlipsDown).setVisible(false);
+                gameField.getCell(row + 1, col).draw(40);
+                gameField.getCell(row, col).draw(40);
+            });
+            countFlips++;
+            flips.add(down);
+        }
+
+        pane.getChildren().addAll(chips);
 
 /*
         left.setCycleCount(10);
@@ -131,10 +164,6 @@ public class AnimationFlip {
         up.setCycleCount(10);
         down.setCycleCount(10);
 */
-        flips.add(right);
-        flips.add(left);
-        flips.add(up);
-        flips.add(down);
     }
 
     public void play() {
@@ -151,6 +180,8 @@ public class AnimationFlip {
         GraphicsContext gc = c.getGraphicsContext2D();
         gc.setFill(color);
         gc.fillRoundRect(0, 0, size-2, size-2, 10, 10);
+        gc.setFill(Color.BLACK);
+        gc.fillRoundRect(15, 15, 10, 10, 10, 10);
         c.setHeight(size);
         c.setWidth(size);
         return c;

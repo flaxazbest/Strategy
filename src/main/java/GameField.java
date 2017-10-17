@@ -57,7 +57,7 @@ public class GameField {
 
     public void tap(int row, int col) {
         if (field[row][col].getOwner() != null && field[row][col].getOwner().equals(players[currentPlayer])) {
-            field[row][col].tap(players[currentPlayer]);
+            field[row][col].tap(players[currentPlayer], true);
             currentPlayer = (currentPlayer+1) % playerCount;
         }
     }
