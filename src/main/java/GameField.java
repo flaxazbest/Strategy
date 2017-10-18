@@ -11,8 +11,10 @@ public class GameField {
     private Cell[][] field = null;
     private GraphicsContext gc;
     private Pane pane;
+    private int chain;
 
     public GameField(int size, int playerCount, GraphicsContext graphicsContext, Pane pane) {
+        this.chain = 0;
         this.gc = graphicsContext;
         this.playerCount = playerCount;
         this.size = size;
@@ -36,6 +38,14 @@ public class GameField {
         draw();
     }
 
+    public int getChain() {
+        return chain;
+    }
+
+    public void nextItrartion() {
+        chain++;
+    }
+
     public Cell getCell(int row, int col) {
         return field[row][col];
     }
@@ -57,8 +67,9 @@ public class GameField {
 
     public void tap(int row, int col) {
         if (field[row][col].getOwner() != null && field[row][col].getOwner().equals(players[currentPlayer])) {
-            field[row][col].tap(players[currentPlayer], true);
-            currentPlayer = (currentPlayer+1) % playerCount;
+            field[row][col].tap(players[currentPlayer], chain);
+            // change to next player
+            //currentPlayer = (currentPlayer+1) % playerCount;
         }
     }
 

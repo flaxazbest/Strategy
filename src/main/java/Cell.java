@@ -33,26 +33,27 @@ public class Cell {
         this.price = price;
     }
 
-    public void tap(Player p, boolean isPlayer) {
+    public void tap(Player p, int chain) {
         price++;
         if (price > 3) {
             price = 0;
 
+            gameField.nextItrartion();
 
             if (row > 0) {
-                gameField.getCell(row-1,col).tap(p, false);
+                gameField.getCell(row-1,col).tap(p, gameField.getChain());
                 gameField.getCell(row-1,col).setOwner(p);
             }
             if (row < gameField.getSize()-1) {
-                gameField.getCell(row+1,col).tap(p, false);
+                gameField.getCell(row+1,col).tap(p, gameField.getChain());
                 gameField.getCell(row+1,col).setOwner(p);
             }
             if (col > 0) {
-                gameField.getCell(row,col-1).tap(p, false);
+                gameField.getCell(row,col-1).tap(p, gameField.getChain());
                 gameField.getCell(row,col-1).setOwner(p);
             }
             if (col < gameField.getSize()-1) {
-                gameField.getCell(row,col+1).tap(p, false);
+                gameField.getCell(row,col+1).tap(p, gameField.getChain());
                 gameField.getCell(row,col+1).setOwner(p);
             }
             AnimationFlip af = new AnimationFlip(row, col, p.getColor(), 40, gameField);
@@ -61,7 +62,7 @@ public class Cell {
         } else {
 
         }
-        if (isPlayer)
+        if (chain == 0)
             draw(40);
     }
 
